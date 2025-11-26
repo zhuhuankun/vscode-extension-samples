@@ -1,3 +1,4 @@
+//LLM Agent should generarte tasklist and coding by (priority) and [develop status]
 //command #description (priority)[develop status]
 
 /vv #run /vstep pipeline based on /context(low)[todo]
