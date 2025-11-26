@@ -57,6 +57,13 @@
 				]
 			},
 			{
+				"id": "vv",
+				"fullName": "CodePilot",
+				"name": "vv",
+				"description": "Enhance your prompts with AI-powered strategy selection",
+				"isSticky": true
+			},
+			{
 				"id": "chat-tools-sample.tools",
 				"fullName": "Tool User",
 				"name": "tools",

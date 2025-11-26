@@ -12,7 +12,8 @@
 4. 在 VS Code 中手动测试 @vv chat participant 可以正常启动并返回 mock 数据
 
 **验收**:
-- [ ] `codePilot.ts` 创建，包含 mock 实现
-- [ ] `extension.ts` 注册 @vv participant
-- [ ] 代码编译通过
-- [ ] 在 Chat 面板中能调用 @vv 并看到 mock 结果
+- [x] `codePilot.ts` 创建，包含 mock 实现
+- [x] `extension.ts` 注册 @vv participant
+- [x] `package.json` 添加 @vv chat participant 配置
+- [x] 代码编译通过
+- [x] 在 Chat 面板中能调用 @vv 并看到 mock 结果
