@@ -22,13 +22,13 @@
 
 ## 项目概况
 
-**项目名**: VS Code Chat Extension - Strategy-based Prompt Enhancement
+**项目名**: VS Code Chat Extension - Prompt Enhancement (@vv)
 **核心需求** (来自 requestdoc.md):
-- 实现一个Copilot Chat Participant (@strategy)
+- 实现一个Copilot Chat Participant (@vv)
 - 用LLM自动判定最优的Prompt增强策略（不做本地特征抽取）
 - 支持6种策略：BASE, COT, TOT_SIMPLE, META, FEWSHOT, CHAIN
 - 单次LLM调用完成策略选择和Prompt生成
-- 交付：`strategyParticipant.ts` + 在 `extension.ts` 注册
+- 交付：`codePilot.ts` + 在 `extension.ts` 注册
 
 **核心设计原则**:
 - 全由LLM判定，无启发式算法

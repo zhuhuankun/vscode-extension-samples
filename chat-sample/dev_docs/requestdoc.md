@@ -126,10 +126,10 @@ Quality Checklist:
 - 不做真实多轮 TOT 思维树扩展。
 
 ## 12. 交付与接口
-- 一个新文件：`strategyParticipant.ts`
-  - 暴露 `generateEnhancedPrompt(rawPrompt, context)`
+- 一个新文件：`codePilot.ts`
+  - 暴露 `generateEnhancedPrompt(rawPrompt, context)` 和 `registerCodePilotParticipant()` 注册函数
   - 内部只构建 LLM 调用 payload 和解析结果
-- 在 `extension.ts` 注册该 participant，命令别名如 `@strategy` 或 `@prompt-helper`。
+- 在 `extension.ts` 导入并调用 `registerCodePilotParticipant(context)` 进行注册，命令别名为 `@vv`。
 - 输出到 Chat 面板：展示 chosen strategies + enhancedPrompt。
 
 ## 13. 质量验收
