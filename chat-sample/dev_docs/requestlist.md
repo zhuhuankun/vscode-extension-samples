@@ -1,6 +1,7 @@
 //LLM Agent should generarte tasklist and coding by (priority) and [develop status]
 //command #description (priority)[develop status]
 
+@vv #use @cc to use “Prompt for Prompt” Chat Participant
 /vv #run /vstep pipeline based on /context(low)[todo]
 -/vstep #show current step(low)[todo]
 --/vconstraint #show below command list (low)[done]
