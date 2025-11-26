@@ -6,7 +6,7 @@
 **步骤**:
 1. 新建文件 `src/codePilot.ts`，定义接口与 mock 实现：
    - `generateEnhancedPrompt(rawPrompt, context)` 接口
-   - Mock 返回一个完整的增强 prompt 结果（包含 primary/secondary 策略、rationale、enhancedPrompt、fewShotExamples）
+   - Mock 返回完整的增强 prompt 结果，包含：userInput、llmThinkingProcess、selectedStrategy（primary/secondary/rationale）、enhancementProcess、enhancedPrompt
 2. 在 `src/extension.ts` 中导入并注册该 participant，命令别名为 `@vv`
 3. 编译验证无误（`npm run compile`）
 4. 在 VS Code 中手动测试 @vv chat participant 可以正常启动并返回 mock 数据
