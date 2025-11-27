@@ -200,7 +200,7 @@ export function registerCodePilotParticipant(context: vscode.ExtensionContext): 
 
 	// Register the chat participant
 	const participant = vscode.chat.createChatParticipant('vv', handler);
-	participant.iconPath = vscode.Uri.joinPath(context.extensionUri, 'media', 'codepilot-icon.svg');
+	participant.iconPath = vscode.Uri.joinPath(context.extensionUri, 'ss.jpg');
 	participant.followupProvider = {
 		provideFollowups(_result: ICodePilotChatResult, _chatContext: vscode.ChatContext, _token: vscode.CancellationToken) {
 			return [
