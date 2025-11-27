@@ -87,18 +87,35 @@ const STRATEGY_SELECTION_ONLY_PROMPT = `你是一个提示词优化专家。分�
 /**
  * LLM System Prompt for Prompt Enhancement (Step 2)
  * Generates the enhanced prompt based on the selected strategy
+ *
+ * 重要: 你的任务是"增强/修改这个prompt"，而不是"回答这个prompt"
+ * 增强意味着：添加结构、指导、上下文、约束等，使原始prompt更清晰有效
  */
-const PROMPT_ENHANCEMENT_PROMPT = `你是一个提示词增强专家。根据选定的策略，生成结构化的增强prompt。
+const PROMPT_ENHANCEMENT_PROMPT = `你是一个提示词增强专家。根据选定的策略，对用户的原始prompt进行增强。
 
-策略说明:
-- BASE: 直接返回原始prompt，最小改动
-- COT: 添加 [PLAN] [EXECUTE] [REFINE] [FINAL] 阶段标签
-- TOT_SIMPLE: 包含方案A/B对比和综合决策
-- META: 包含 Role: / Objectives: / Constraints: / Output Format: / Quality Checklist:
-- FEWSHOT: 包含2-3个具体的代码或示例
-- CHAIN: 完整的 [PLAN] → [EXECUTE] → [REFINE] → [FINAL] 结构
+**重要区别**：
+- ❌ 不是回答这个prompt（不要给出答案）
+- ✅ 是重写/增强这个prompt，使其更清晰、更有效、更能得到高质量回答
 
-直接返回增强后的prompt，不需要JSON。`;
+**策略增强方式** (按权重应用，primary为主要80%，secondary为辅助20%)：
+
+单一策略:
+- BASE: 直接返回原始prompt，最小改动，不添加任何结构
+- COT: 在prompt中添加分步骤推理框架（[PLAN] → [EXECUTE] → [REFINE] → [FINAL]），引导逐步思考
+- TOT_SIMPLE: 改写prompt为对比框架，明确要求对比A/B两个方案的优缺点，最后给出综合推荐
+- META: 改写prompt为结构化框架（Role / Objectives / Constraints / Output Format / Quality Checklist）
+- FEWSHOT: 改写prompt为示例驱动框架，明确要求提供2-3个具体代码/示例，并在每个示例后说明其意义
+- CHAIN: 改写prompt为完整四阶段框架（[PLAN] → [EXECUTE] → [REFINE] → [FINAL]），每阶段明确输出要求
+
+复合策略应用规则 (Primary为主导，Secondary为增强):
+- FEWSHOT + COT: 【主】以示例为中心，【辅】在示例间加入"为什么这样工作"的分步骤说明
+- FEWSHOT + META: 【主】示例为核心，【辅】加入Role/Objectives框架来指导示例的选择
+- META + COT: 【主】结构化框架为基础，【辅】在框架内添加分步骤推理指导
+- META + FEWSHOT: 【主】结构化框架，【辅】框架内包含具体示例
+- 其他组合: Primary策略占主体（70-80%），Secondary策略作为补充细节（20-30%）
+
+**增强的是prompt本身，不要直接回答问题**
+直接返回增强后的prompt（纯文本形式），不需要JSON或其他格式。`;
 
 /**
  * Call LLM Step 1: Select the best strategy for the prompt
@@ -177,18 +194,34 @@ async function generateEnhancedPromptForStrategy(
 	token: vscode.CancellationToken
 ): Promise<string> {
 	try {
-		const strategyInfo = `Selected Strategy: ${strategy.selectedStrategy.primary}${strategy.selectedStrategy.secondary ? ` + ${strategy.selectedStrategy.secondary}` : ''}`;
+		const strategyInfo = strategy.selectedStrategy.secondary
+			? `Primary Strategy (主导80%): ${strategy.selectedStrategy.primary}\nSecondary Strategy (辅助20%): ${strategy.selectedStrategy.secondary}`
+			: `Single Strategy: ${strategy.selectedStrategy.primary}`;
 
 		const userMessage = `${PROMPT_ENHANCEMENT_PROMPT}
 
+---
+
 ${strategyInfo}
 
-Original Prompt:
+**策略应用权重说明**:
+- Primary策略是主要框架和重点（占80%的内容和结构）
+- Secondary策略是补充和增强（占20%，用来完善primary）
+
+---
+
+**Original Prompt (需要增强):**
 ${rawPrompt}
 
-Context:
+---
+
+**Context:**
 - Language: ${context.language || 'N/A'}
-- Has selected code: ${context.selectedCode ? 'Yes' : 'No'}`;
+- Has selected code: ${context.selectedCode ? 'Yes' : 'No'}
+
+---
+
+**请输出增强后的prompt。确保按照策略权重来应用（Primary为主，Secondary为辅）。不要回答这个prompt，只需改写/增强它。**`;
 
 		const messages = [
 			vscode.LanguageModelChatMessage.User(userMessage)
